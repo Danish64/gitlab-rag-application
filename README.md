@@ -76,6 +76,38 @@ uvicorn api.main:app --reload
 - "What are the onboarding steps for new hires?"
 - "How does the promotion process work?"
 
+## Build Vector Database
+
+The vector database (`chroma_db/`) is not included in git. You need to build it:
+
+```bash
+cd src && python embeddings.py
+```
+
+This will:
+- Load 332 markdown documents from `documents/`
+- Chunk them into ~6,500 pieces
+- Embed using OpenAI `text-embedding-3-small`
+- Store in ChromaDB at `chroma_db/`
+
+### Rebuilding from scratch
+
+```bash
+# Option 1: Delete and rebuild
+rm -rf chroma_db/
+cd src && python embeddings.py
+
+# Option 2: Force rebuild
+cd src && python -c "from embeddings import create_vectorstore; create_vectorstore(force_rebuild=True)"
+```
+
+## Visualize Embeddings
+
+```bash
+cd src && python visualize.py
+# Opens embedding_visualization.html in browser
+```
+
 ## Tech stack
 
 - **LangChain** - for building the RAG pipeline

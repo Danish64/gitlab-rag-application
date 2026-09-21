@@ -1,2 +1,24 @@
+# Environment
 .env
+.env.local
+
+# OS
 **/.DS_Store
+
+# Vector database (regenerate with: cd src && python embeddings.py)
+chroma_db/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+rag-venv/
+
+# Generated files
+embedding_visualization.html
+
+# IDE
+.vscode/
+.idea/
