@@ -1,27 +1,27 @@
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # load from /documents directory
-loader = DirectoryLoader("documents",
-    glob="**/*.md",
-    loader_cls=TextLoader,
-    show_progress=True
-)
-
-docs = loader.lazy_load()
-doc = next(docs)
-
-print("=" * 50)
-
-print(f"Source: {doc.metadata.get('source')}")
-
-print(f"Content Length: {len(doc.page_content)} chars")
-
-print(f"Preview: {doc.page_content[:200]}")
 
 
-# for doc in docs:
-#     print("=" * 50)
+def load_documents(path="documents/"):
+    loader = DirectoryLoader(
+        "documents", glob="**/*.md", loader_cls=TextLoader, show_progress=True
+    )
 
-#     print(f"Source: {doc.metadata.get('source')}")
+    docs = list(loader.lazy_load())
 
-#     print(f"Content Length: {len(doc.page_content)}")
+    docs = [d for d in docs if len(d.page_content) > 100]
+
+    return docs
+
+
+def chunk_documents(docs):
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100,
+    )
+    chunks = splitter.split_documents(docs)
+    chunks = [c for c in chunks if len(c.page_content) > 50]
+
+    return chunks
